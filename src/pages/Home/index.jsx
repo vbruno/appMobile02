@@ -10,6 +10,8 @@ import {
 
 export function Home() {
   const [text, setText] = useState("Texto Simples");
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     // setText("Texto Montado");
@@ -18,10 +20,10 @@ export function Home() {
   async function onPress() {
     console.log("Func Funcionando");
 
-    const response = await axios.get("http://10.3.170.62:3333/");
+    const response = await axios.get("http://10.3.177.112:3333/");
 
     const result = response.data.find((item) => {
-      return item.id == 10;
+      return item.id == text;
     });
 
     if (result) {
@@ -33,19 +35,44 @@ export function Home() {
     // console.log(JSON.stringify(result.data, null, 2));
   }
 
+  async function onPost() {
+    await axios
+      .post("http://10.3.177.112:3333/", {
+        name: nome,
+        email: email,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <View style={styles.container}>
       <Text>Componente Home</Text>
       <Text>------------------------------</Text>
       <Text>Texto de Entrada:</Text>
-      <TextInput onChangeText={(Text) => setText(Text)} />
+      <TextInput onChangeText={setText} />
       <Text>------------------------------</Text>
+      <Text>Texto de Saida:</Text>
       <Text>Texto de Saida:</Text>
       <Text>{text}</Text>
       <Text>------------------------------</Text>
       <TouchableOpacity onPress={onPress}>
         <Text>Botão de Request</Text>
       </TouchableOpacity>
+      <Text>------------------------------</Text>
+      <Text>Cadastrar Cliente</Text>
+      <Text>Nome:</Text>
+      <TextInput onChangeText={setNome} />
+      <Text>Email:</Text>
+      <TextInput onChangeText={setEmail} />
+      <TouchableOpacity onPress={onPost}>
+        <Text>Botão fazer POST</Text>
+      </TouchableOpacity>
+      <Text>------------------------------</Text>
     </View>
   );
 }
